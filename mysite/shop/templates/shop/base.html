@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <title>{% if title %}{{ title }}{% endif %}</title>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
+    <link href="{% static 'css/votesapp-style.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'js/jquery-3.5.1.slim.min.js' %}"></script>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% block extra-js %}
+
+    {% endblock extra-js %}
+</head>
+<body style="margin-bottom:50px; font-size:0.8rem;">
+
+
+<div class="container">
+    <header class="page-top">
+        {% block header %}
+
+        {% endblock header %}
+    </header>
+
+    {% block content %}
+    {% endblock content %}
+
+
+</div>
+{% block footer-nav %}
+<!--  固定在底部的导航  -->
+<footer class="footer mt-auto">
+    <!--<script type="text/javascript">-->
+    <!--&lt;!&ndash; 底部导航栏遮盖内容 &ndash;&gt;-->
+    <!--    var onResize = function(){-->
+    <!--        $('body').css('margin-bottom',$('.nav').height());-->
+    <!--    };-->
+    <!--    $(window).resize(onResize);-->
+    <!--    $(function(){-->
+    <!--        onResize();-->
+    <!--    });-->
+    <!--</script>-->
+    <nav class="nav nav-justified bg-dark fixed-bottom" style="height:50px">
+        {% if home_page %}
+        <a class="flex-ms-fill text-ms-center nav-link" href="{{ home_page.url }}">
+            <figure class="figure" style="margin-bottom: 0px">
+                <i class="bi-{{ home_page.icon_class }} figure-img img-fluid rounded mb-0"
+                   style="color:#ffffff;width:20px;height:20px"></i>
+                <figcaption class="figure-caption text-white">{{ home_page.page_name }}</figcaption>
+            </figure>
+        </a>
+        {% endif %}
+
+        {% if rank_page %}
+        <a class="flex-ms-fill text-ms-center nav-link" href="{{ rank_page.url }}">
+            <figure class="figure" style="margin-bottom: 0px">
+                <i class="bi-{{ rank_page.icon_class }} figure-img img-fluid rounded mb-0"
+                   style="color:#ffffff;width:20px;height:20px"></i>
+                <figcaption class="figure-caption text-white">{{ rank_page.page_name }}</figcaption>
+            </figure>
+        </a>
+        {% endif %}
+    </nav>
+</footer>
+{% endblock footer-nav %}
+
+
+</body>
+</html>
