@@ -8,7 +8,7 @@
     <h3>Categories</h3>
     <ul>
     <li {% if not category %}class="selected"{% endif %}>
-    <a href="{% url "shops :product_list" %}">All</a>
+    <a href="{% url "shops :product_list "  %}">All</a>
      </li>
  {% for c in categories %}
     <li {% if category.slug == c.slug %}class="selected" {% endif %}>
