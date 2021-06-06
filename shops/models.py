@@ -37,7 +37,7 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
-    product_id=models.autofield()
+
     category = models.ForeignKey(Category,related_name='products',on_delete=models.CASCADE)
     quantity=models.IntegerField(default=0, verbose_name='数量')
     name = models.CharField(max_length=200, db_index=True)
