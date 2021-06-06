@@ -11,26 +11,6 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 
-class Question(models.Model):
-    def __str__(self):
-        return self.question_text
-
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
-
-
-class Choice(models.Model):
-    def __str__(self):
-        return self.choice_text
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
-
-class GOODS(models.Model):
-    def __str__(self):
-        return self.question_text
-
-    ID = models.AutoField()
 
 
 
@@ -138,7 +118,7 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     def get_absolute_url(self):
-        return reverse('shop:product_list_by_category',
+        return reverse('shops:product_list_by_category',
                          args=[self.slug])
 
     def __str__(self):
@@ -161,7 +141,7 @@ class Product(models.Model):
         index_together = (('id', 'slug'),)
 
     def get_absolute_url(self):
-        return reverse('shop:product_detail',
+        return reverse('shops:product_detail',
                        args=[self.id, self.slug])
 
     def __str__(self):
