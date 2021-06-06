@@ -1,0 +1,8 @@
+
+ul.list-unstyled li {
+    list-style-type: none;
+}
+
+tr.align-middle td th {
+    vertical-align: middle;
+}
