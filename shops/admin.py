@@ -14,12 +14,5 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'available']
     prepopulated_fields = {'slug': ('name',)}
 
-@admin.register(Activity)
-
-class ActivityAdmin(admin.ModelAdmin):
-    list_display = ['name', 'discount', 'available','created', 'updated']
-    list_filter = ['available', 'created', 'updated']
-    list_editable = ['discount', 'available']
-    prepopulated_fields = {'slug': ('name',)}
 
 
