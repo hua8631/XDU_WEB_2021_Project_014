@@ -1,14 +1,17 @@
+
 {% extends 'base.html' %}
 
 {% block body %}
     <table>
         <tr>
+           <th>image</th>
             <th>Product</th>
             <th>Quantity</th>
             <th>Total Price</th>
         </tr>
         {% for item in cart %}
         <tr>
+            <td>{{ item.product.image }}</td>
             <td>{{ item.product.name }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.total_price }}</td>
