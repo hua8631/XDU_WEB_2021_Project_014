@@ -35,13 +35,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 INSTALLED_APPS = [
     'simpleui',
     'shops.apps.PollsConfig',
+    'cart.apps.CartConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cart',
+    'orders.apps.OrdersConfig',
     # 'shops'
 
 ]
@@ -129,3 +130,4 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+CART_SESSION_ID = 'cart'

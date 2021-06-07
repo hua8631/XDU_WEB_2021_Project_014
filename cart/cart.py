@@ -1,86 +1,76 @@
-import datetime
-from django.db.models import Sum
-from django.db.models import F
-from . import models
-
-CART_ID = 'CART-ID'
+from decimal import Decimal
+from django.conf import settings
+from shops.models import Product
 
 
-class ItemAlreadyExists(Exception):
-    pass
+class Cart(object):
 
-
-class ItemDoesNotExist(Exception):
-    pass
-
-
-class Cart:
     def __init__(self, request):
-        cart_id = request.session.get(CART_ID)
-        if cart_id:
-            cart = models.Cart.objects.filter(id=cart_id, checked_out=False).first()
-            if cart is None:
-                cart = self.new(request)
-        else:
-            cart = self.new(request)
+        """
+        Initialize the cart.
+        """
+        self.session = request.session
+        cart = self.session.get(settings.CART_SESSION_ID)
+        if not cart:
+            # save an empty cart in the session
+            cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
     def __iter__(self):
-        for item in self.cart.item_set.all():
+        """
+        Iterate over the items in the cart and get the products
+        from the database.
+        """
+        product_ids = self.cart.keys()
+        # get the product objects and add them to the cart
+        products = Product.objects.filter(id__in=product_ids)
+
+        cart = self.cart.copy()
+        for product in products:
+            cart[str(product.id)]['product'] = product
+
+        for item in cart.values():
+            item['price'] = Decimal(item['price'])
+            item['total_price'] = item['price'] * item['quantity']
             yield item
 
-    def new(self, request):
-        cart = models.Cart.objects.create(creation_date=datetime.datetime.now())
-        request.session[CART_ID] = cart.id
-        return cart
+    def __len__(self):
+        """
+        Count all items in the cart.
+        """
+        return sum(item['quantity'] for item in self.cart.values())
 
-    def add(self, product, unit_price, quantity=1):
-        item = models.Item.objects.filter(cart=self.cart, product=product).first()
-        if item:
-            item.unit_price = unit_price
-            item.quantity += int(quantity)
-            item.save()
+    def add(self, product, quantity=1, override_quantity=False):
+        """
+        Add a product to the cart or update its quantity.
+        """
+        product_id = str(product.id)
+        if product_id not in self.cart:
+            self.cart[product_id] = {'quantity': 0,
+                                      'price': str(product.price)}
+        if override_quantity:
+            self.cart[product_id]['quantity'] = quantity
         else:
-            models.Item.objects.create(cart=self.cart, product=product, unit_price=unit_price, quantity=quantity)
+            self.cart[product_id]['quantity'] += quantity
+        self.save()
+
+    def save(self):
+        # mark the session as "modified" to make sure it gets saved
+        self.session.modified = True
 
     def remove(self, product):
-        item = models.Item.objects.filter(cart=self.cart, product=product).first()
-        if item:
-            item.delete()
-        else:
-            raise ItemDoesNotExist
-
-    def update(self, product, quantity, unit_price=None):
-        item = models.Item.objects.filter(cart=self.cart, product=product).first()
-        if item:
-            if quantity == 0:
-                item.delete()
-            else:
-                item.unit_price = unit_price
-                item.quantity = int(quantity)
-                item.save()
-        else:
-            raise ItemDoesNotExist
-
-    def count(self):
-        return self.cart.item_set.all().aggregate(Sum('quantity')).get('quantity__sum', 0)
-
-    def summary(self):
-        return self.cart.item_set.all().aggregate(total=Sum(F('quantity')*F('unit_price'))).get('total', 0)
+        """
+        Remove a product from the cart.
+        """
+        product_id = str(product.id)
+        if product_id in self.cart:
+            del self.cart[product_id]
+            self.save()
 
     def clear(self):
-        self.cart.item_set.all().delete()
+        # remove cart from session
+        del self.session[settings.CART_SESSION_ID]
+        self.save()
 
-    def is_empty(self):
-        return self.count() == 0
-
-    def cart_serializable(self):
-        representation = {}
-        for item in self.cart.item_set.all():
-            item_id = str(item.object_id)
-            item_dict = {
-                'total_price': item.total_price,
-                'quantity': item.quantity
-            }
-            representation[item_id] = item_dict
-        return representation
+    def get_total_price(self):
+        return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())

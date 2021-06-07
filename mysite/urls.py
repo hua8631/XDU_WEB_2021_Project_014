@@ -18,11 +18,13 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from shops.urls import urlpatterns as shopsurl
+from cart.urls import urlpatterns as cartsurl
+
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('', include((shopsurl,'shops'), namespace='shops'))
-
+    path('shops/', include((shopsurl,'shops'), namespace='shops')),
+    path('cart/', include((cartsurl,'cart'), namespace='cart')),
 
 
 ]
