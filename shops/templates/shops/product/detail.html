@@ -4,21 +4,43 @@
  {{ product.name }}
 {% endblock %}
 {% block content %}
- <div class="product-detail">
-  <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
- <h1>{{ product.name }}</h1>
- <h2>
- <a href="{{ product.category.get_absolute_url }}">
- {{ product.category }}
- </a>
- </h2>
- <p class="price">${{ product.price }}</p>
+<style>
 
-<form action="{% url "cart:cart_add" product.id %}" method="post">
-{{ cart_product_form }}
- {% csrf_token %}
- <input type="submit" value="Add to cart">
-</form>
-  {{ product.description|linebreaks }}
+</style>
+<div class="container-fluid">
+ <div class="product-detail row ">
+  <div class="col-sm-8 " >
+       <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+  </div>
+
+  <div class="col-sm-1 middle " ></div>
+
+  <div class="col-sm-3 middle text " >
+       <div class="panel panel-default">
+	        <div class="panel-heading"><h1>buying it</h1></div>
+            <ul class="list-group">
+                <li class="list-group-item">
+                   <h2>
+                   <a href="{{ product.category.get_absolute_url }}">
+                       {{ product.category }}</a>
+                   </h2>
+                </li>
+                <li class="list-group-item">
+                   <p class="price">¥{{ product.price }}</p>
+                </li>
+                <li class="list-group-item">
+                   <form action="{% url "cart:cart_add" product.id %}" method="post">
+                    {{ cart_product_form }}
+                    {% csrf_token %}
+                    <input type="submit" value="Add to cart">
+                   </form>
+                </li>
+                <li class="list-group-item">
+                    {{ product.description|linebreaks }}
+                </li>
+            </ul>
+       </div>
+  </div>
  </div>
+</div>
 {% endblock %}

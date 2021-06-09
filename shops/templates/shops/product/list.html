@@ -4,38 +4,41 @@
  {% if category %}{{ category.name }}{% else %}Products{% endif %}
 {% endblock %}
 {% block content %}
- <div id="sidebar">
-    <h3>Categories</h3>
-    <ul>
-    <li {% if not category %}class="selected"{% endif %}>
-    <a href="{% url "shops:product_list"  %}">All</a>
-     </li>
+<div align="center" style="margin-top: 20px;">
+    <div id="sidebar" class="panel panel-default">
+        <div class="panel-heading"><h3>Categories</h3></div>
+         <ul class="nav nav-pills nav-stacked">
+            <li {% if not category %}class="selected"{% endif %}>
+                    <a href="{% url "shops:product_list"  %}">All</a>
+            </li>
+             {% for c in categories %}
+            <li {% if category.slug == c.slug %}class="selected" {% endif %}>
+                    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+            </li>
+             {% endfor %}
+        </ul>
+     </div>
+</div>
 
-<!--   目录     -->
- {% for c in categories %}
-    <li {% if category.slug == c.slug %}class="selected" {% endif %}>
-    <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
-     </li>
- {% endfor %}
-
-     </ul>
-    </div>
-
-
-   <div id="main" class="product-list">
-         <h1>{% if category %}{{ category.name }}{% else %}Products {% endif %}</h1>
- {% for product in products %}
-
-
- <div class="item">
-
-     <a href="{{ product.get_absolute_url }}"><img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
- </a>
- <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
- <br>
+<div>
+    <h1>{% if category %}{{ category.name }}{% else %}Products {% endif %}</h1>
+         {% for product in products %}
+    <div  style="display: table; border-spacing: 30px;">
+        <div style="width: 400px; height: 300px; background-color: #DCDCDC; display: table-cell;">
+            <a href="{{ product.get_absolute_url }}"><img  width="400px" height="300px" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"></a>
+            <div style="width: 100%; height: 100px; background-color: #F6F6F6; text-align: center;">
+                <div style="height: 5px;"></div>
+                <div>
+                    <label style="font-size: 20px"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></label>
+                </div>
+                <div style="margin-top: 1px">
+                    <label style="color: #696969">¥{{ product.price }}</label>
+                </div>
+            </div>
+        </div>
 
 
- ${{ product.price }}
- </div>
+        </div>
   {% endfor %}
+</div>
     {% endblock %}

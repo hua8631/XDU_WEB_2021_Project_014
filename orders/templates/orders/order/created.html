@@ -3,7 +3,31 @@
  感谢您的购买
 {% endblock %}
 {% block content %}
- <h1>Thank you</h1>
- <p>您的订单创建成功. 订单号为
- <strong>{{ order.id }}</strong>.</p>
+<div class="col-md-4 col-sm-4">
+</div>
+
+<div class="form-checkout col-md-4 col-sm-4" style="text-align: center; margin-top: 10%;">
+	<h1>谢谢惠顾！</h1>
+	<p></p>
+	<p>您的订单创建成功. 订单号为
+	<strong>{{ order.id }}</strong>.</p>
+</div>
+
+<div class="col-md-4 col-sm-4">
+</div>
+<style>
+body {
+		background: #eee !important;
+		/* background: #252954 !important; */
+	}
+.form-checkout {
+/* 	  max-width: 380px; */
+	  padding: 15px 35px 45px;
+ 	  margin: 0 auto;
+	  background-color: #fff;
+	  border: 1px solid rgba(0,0,0,0.1);
+	  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+	  border-radius: 10px;
+	}
+</style>
 {% endblock %}
