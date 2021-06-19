@@ -27,7 +27,8 @@ DJANGO_SETTINGS_MODULE = 'mysite.settings'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Application definition
@@ -127,9 +128,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+
+
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"static")
+
+STATIC_URL = '/static/'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CART_SESSION_ID = 'cart'
+
+SIMPLEUI_HOME_INFO=False
+
+
 
 SIMPLEUI_HOME_INFO=False
